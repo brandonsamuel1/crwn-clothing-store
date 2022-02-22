@@ -1,4 +1,5 @@
 import React from "react";
+import Alert from "@mui/material/Alert";
 import './signin.styles.scss'
 
 import FormInput from "../form-input/form-input.component";
@@ -12,7 +13,9 @@ class Signin extends React.Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            fail: false,
+            success: false
         }
     }
 
@@ -23,9 +26,16 @@ class Signin extends React.Component {
 
         try {
             await auth.signInWithEmailAndPassword(email, password);
-            this.setState({ email: '', password: '' })
+            this.setState({ email: '', password: '', success: true })
+            setTimeout(() => {
+                this.setState({ success: false })
+            }, 2000)
         } catch (error) {
             console.error(error)
+            this.setState({ fail: true })
+            setTimeout(() => {
+                this.setState({ fail: false })
+            }, 2000)
         }
 
 
@@ -38,8 +48,11 @@ class Signin extends React.Component {
     }
 
     render() {
+        const { fail, success } = this.state;
         return (
             <div className="sign-in">
+                {fail ? <Alert severity="error">Something went wrong! Try again</Alert> : <></>}
+                {success ? <Alert severity="success">Success!</Alert> : <></>}
                 <h2>I already have an account</h2>
                 <span>Signin with your email and password</span>
 
